@@ -3,7 +3,14 @@ const https = require('https');
 function follow(url, depth, res) {
   if (depth > 10) return res.status(500).json({ error: 'Too many redirects' });
   
-  https.get(url, (r) => {
+  const options = {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': 'application/json, text/plain, */*',
+    }
+  };
+
+  https.get(url, options, (r) => {
     if (r.statusCode >= 300 && r.statusCode < 400 && r.headers.location) {
       return follow(r.headers.location, depth + 1, res);
     }
